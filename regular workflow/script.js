@@ -1,13 +1,13 @@
 //http://api.openweathermap.org/data/2.5/weather?q=London&APPID=
-const dotenv = require('dotenv')
+// import dotenv from 'dotenv'
 
-dotenv.config();
+// dotenv.config();
 
-async function fetchWeather(city) {
-    const API_KEY = process.env.OPENWEATHER_API;
+async function fetchWeather(city = "Toronto") {
+    const API_KEY = "495c3ff348c83bce1d05cf49bb674544";
     const response = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&APPID=${API_KEY}`);
     const weatherData = await response.json();
-    console.log(weatherData.main.temp)
+    console.log(weatherData)
 }
 
 
