@@ -30,16 +30,18 @@ function convertTime(unixTime) {
 }
 
 function formatTime(hour) {
-    let abbrev = "";
+    let abbrev;
+    let newHour;
+
     if (parseInt(hour) > 12) {
-        let hour = parseInt(hour) - 12;
+        newHour = parseInt(hour) - 12;
         abbrev = "PM";
     } else {
         abbrev = "AM";
     }
 
-    newHour = `${hour}:00 ${abbrev}`;
-    return newHour
+    formattedHour = `${newHour}:00 ${abbrev}`;
+    return formattedHour
 }
 
 function determineIcon(data) {

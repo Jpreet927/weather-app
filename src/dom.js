@@ -1,6 +1,7 @@
 import { farenheitToCelsius, 
          celsiusToFarenheit, 
          kelvinToCelsius, 
+         convertTime,
          determineIcon, 
          determineBackground } from './helpers'
 
@@ -16,6 +17,8 @@ function renderPage(current, city) {
     let weatherInfoContainer = document.createElement("div");
     let weatherInfoTop = document.createElement("div");
     let weatherInfoBottom = document.createElement("div");
+    let dailyWeatherContainer = document.createElement("div");
+    let hourlyWeatherContainer = document.createElement("div");
 
     container.classList.add("container");
     headerTitle.classList.add("header-title");
@@ -26,6 +29,8 @@ function renderPage(current, city) {
     weatherInfoContainer.classList.add("weather-info-container");
     weatherInfoTop.classList.add("weather-top");
     weatherInfoBottom.classList.add("weather-bottom");
+    dailyWeatherContainer.classList.add("weather-daily-container");
+    hourlyWeatherContainer.classList.add("weather-hourly-container");
 
     container.style.backgroundImage = determineBackground();
     headerTitle.textContent = "Weather App";
@@ -35,6 +40,8 @@ function renderPage(current, city) {
     citySearchContainer.append(citySearchInput, citySearchIcon);
     cityForm.append(citySearchContainer);
     header.append(headerTitle, cityForm);
+    weatherInfoTop.append(dailyWeatherContainer);
+    weatherInfoBottom.append(hourlyWeatherContainer);
     weatherInfoContainer.append(weatherInfoTop, weatherInfoBottom);
     weatherInfoBody.append(weatherInfoContainer);
     container.append(header, weatherInfoBody);
@@ -75,7 +82,7 @@ function renderCurrentWeather(current, city) {
 
     infoContainer.append(feelsLikeTemp, humidity, pressure);
     currentContainer.append(location, icon, currentTemperature, infoContainer);
-    container.append(currentContainer);
+    container.prepend(currentContainer); 
 }
 
 function renderDailyWeather(daily) {
@@ -104,7 +111,6 @@ function renderDailyWeather(daily) {
     tempRangeContainer.append(dailyHigh, dailyLow);
     dailyContainer.append(day, icon, temperature, tempRangeContainer);
     container.append(dailyContainer);
-    // renders single card, called in loop
 }
 
 function renderHourlyWeather(hourly) {
