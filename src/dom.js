@@ -1,3 +1,4 @@
+import { fetchCurrentWeather } from './apiCalls';
 import { farenheitToCelsius, 
          celsiusToFarenheit, 
          kelvinToCelsius, 
@@ -5,7 +6,8 @@ import { farenheitToCelsius,
          determineIcon, 
          determineBackground } from './helpers'
 
-function renderPage(current, city) {
+function renderPage() {
+    let body = document.querySelector("body");
     let container = document.createElement("div");
     let header = document.createElement("header");
     let headerTitle = document.createElement("h1");
@@ -17,6 +19,7 @@ function renderPage(current, city) {
     let weatherInfoContainer = document.createElement("div");
     let weatherInfoTop = document.createElement("div");
     let weatherInfoBottom = document.createElement("div");
+    let currentWeatherContainer = document.createElement("div");
     let dailyWeatherContainer = document.createElement("div");
     let hourlyWeatherContainer = document.createElement("div");
 
@@ -29,10 +32,11 @@ function renderPage(current, city) {
     weatherInfoContainer.classList.add("weather-info-container");
     weatherInfoTop.classList.add("weather-top");
     weatherInfoBottom.classList.add("weather-bottom");
+    currentWeatherContainer.classList.add("weather-today-container");
     dailyWeatherContainer.classList.add("weather-daily-container");
     hourlyWeatherContainer.classList.add("weather-hourly-container");
 
-    container.style.backgroundImage = determineBackground(current.weather.main, current.dt, current.sunrise, current.sunset);
+    // container.style.backgroundImage = determineBackground(current.weather.main, current.dt, current.sunrise, current.sunset);
     headerTitle.textContent = "Weather App";
     citySearchInput.type = "text";
     citySearchIcon.src = "../images/Icons/search.png";
@@ -40,11 +44,12 @@ function renderPage(current, city) {
     citySearchContainer.append(citySearchInput, citySearchIcon);
     cityForm.append(citySearchContainer);
     header.append(headerTitle, cityForm);
-    weatherInfoTop.append(dailyWeatherContainer);
+    weatherInfoTop.append(currentWeatherContainer, dailyWeatherContainer);
     weatherInfoBottom.append(hourlyWeatherContainer);
     weatherInfoContainer.append(weatherInfoTop, weatherInfoBottom);
     weatherInfoBody.append(weatherInfoContainer);
     container.append(header, weatherInfoBody);
+    body.append(container);
 
     cityForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -52,14 +57,13 @@ function renderPage(current, city) {
         let city = citySearchInput.value.trim();
         if (city) {
             fetchCurrentWeather(city);
-            cityInput.value = "";
+            citySearchInput.value = "";
         }
     });
 }
 
 function renderCurrentWeather(current, city) {
-    let container = document.querySelector(".weather-top");
-    let currentContainer = document.createElement("div");
+    let container = document.querySelector(".weather-today-container")
     let location = document.createElement("p");
     let icon = document.createElement("img");
     let currentTemperature = document.createElement("h1");
@@ -69,20 +73,19 @@ function renderCurrentWeather(current, city) {
     let pressure = document.createElement("p");
 
     location.textContent = city;
-    currentTemperature.textContent = current.temp; // function to convert to C
-    feelsLikeTemp.textContent = current.feels_like; // function to convert to C
+    currentTemperature.textContent = `${current.temp} °C`; // function to convert to C
+    feelsLikeTemp.textContent = `${current.feels_like} °C`; // function to convert to C
     humidity.textContent = `${current.humidity} %`;
     pressure.textContent = `${current.pressure} mb`;
-    icon.src = "" // function to determine icon
+    icon.src = determineIcon(current.weather[0].main, current.dt);
 
-    currentContainer.classList.add("weather-today-container");
+    // container.classList.add("weather-today-container");
     location.classList.add("city");
     currentTemperature.classList.add("current-temperature");
     infoContainer.classList.add("other-info");
 
     infoContainer.append(feelsLikeTemp, humidity, pressure);
-    currentContainer.append(location, icon, currentTemperature, infoContainer);
-    container.prepend(currentContainer); 
+    container.append(location, icon, currentTemperature, infoContainer);
 }
 
 function renderDailyWeather(daily) {
@@ -95,11 +98,11 @@ function renderDailyWeather(daily) {
     let dailyHigh = document.createElement("p");
     let dailyLow = document.createElement("p");
 
-    day.textContent = convertTime(daily.dt)[0]; // convert unix to day/time
-    temperature.textContent = daily.temp.day;
-    dailyHigh.textContent = daily.temp.max;
-    dailyLow.textContent = daily.temp.min;
-    icon.src = determineIcon(daily.weather.main, daily.dt) 
+    day.textContent = convertTime(daily.dt).day; // convert unix to day/time
+    temperature.textContent = `${daily.temp.day} °C`;
+    dailyHigh.textContent = `${daily.temp.max} °C`;
+    dailyLow.textContent = `${daily.temp.min} °C`;
+    icon.src = determineIcon(daily.weather[0].main, daily.dt);
 
     dailyContainer.classList.add("weather-daily");
     day.classList.add("day-of-week");
@@ -120,27 +123,42 @@ function renderHourlyWeather(hourly) {
     let temperature = document.createElement("h1");
     let time = document.createElement("p");
 
-    icon.src = determineIcon(hourly.weather.main, hourly.dt) // function to determine icon
-    temperature.textContent = hourly.temp;
-    time.textContent = convertTime(hourly.dt)[1]; // function to convert time from UNIX
+    icon.src = determineIcon(hourly.weather[0].main, hourly.dt)
+    temperature.textContent = `${hourly.temp} °C`;
+    time.textContent = convertTime(hourly.dt).formattedTime;
+
+    hourlyContainer.classList.add("weather-hourly");
+    temperature.classList.add("hourly-temperature");
+    time.classList.add("hourly-time");
+    hourlyContainer.append(icon, temperature, time);
+    container.append(hourlyContainer);
 }
 
 function updateBackground(current) {
     let background = document.querySelector(".container");
-    background.style.backgroundImage = determineBackground(current.weather.main, current.dt, current.sunrise, current.sunset);
+    console.log(current.weather[0].main);
+    background.style.backgroundImage = `url(${determineBackground(current.weather[0].main, current.dt, current.sunrise, current.sunset)})`;
 }
 
 function updateWeather(current, dailyArr, hourlyArr, city) {
+    let currentContainer = document.querySelector(".weather-today-container");
+    let dailyContainer = document.querySelector(".weather-daily-container");
+    let hourlyContainer = document.querySelector(".weather-hourly-container");
+
+    currentContainer.innerHTML = "";
+    dailyContainer.innerHTML = "";
+    hourlyContainer.innerHTML = "";
+
     updateBackground(current);
     renderCurrentWeather(current, city);
 
-    for (let i; i < dailyArr.length; i++) {
+    for (let i = 0; i < 5; i++) {
         renderDailyWeather(dailyArr[i]);
     }
 
-    for (let i; i < hourlyArr.length; i++) {
+    for (let i = 0; i < 7; i++) {
         renderHourlyWeather(hourlyArr[i]);
     }
 }
 
-export { updateWeather }
+export { renderPage, updateWeather }

@@ -1,15 +1,15 @@
 function farenheitToCelsius(temp) {
-    celsiusTemp = (temp - 32) * 5 / 9;
+    let celsiusTemp = (temp - 32) * 5 / 9;
     return celsiusTemp
 }
 
 function celsiusToFarenheit(temp) {
-    farenheitTemp = (temp * 9 / 5) + 32;
+    let farenheitTemp = (temp * 9 / 5) + 32;
     return farenheitTemp
 }
 
 function kelvinToCelsius(temp) {
-    celsiusTemp = temp - 273.15;
+    let celsiusTemp = temp - 273.15;
     return celsiusTemp
 }
 
@@ -24,9 +24,16 @@ function convertTime(unixTime) {
 
     let date = new Date(unixTime * 1000);
     let day = daysOfWeek[date.getDay()];
-    let hour = formatTime(date.getHours());
+    let hour = date.getHours();
+    let formattedHour = formatTime(date.getHours());
 
-    return [day, hour]
+    let dateTimeData = {
+        day: day,
+        hour: hour,
+        formattedTime: formattedHour
+    }
+
+    return dateTimeData
 }
 
 function formatTime(hour) {
@@ -40,12 +47,12 @@ function formatTime(hour) {
         abbrev = "AM";
     }
 
-    formattedHour = `${newHour}:00 ${abbrev}`;
+    let formattedHour = `${newHour}:00 ${abbrev}`;
     return formattedHour
 }
 
 function determineIcon(weatherCondition, time) {
-    timeHour = convertTime(time)[1];
+    let timeHour = convertTime(time).hour;
 
     if (timeHour > 20 || timeHour < 6) {
         return "../images/Icons/night.png"
@@ -65,9 +72,10 @@ function determineIcon(weatherCondition, time) {
 }
 
 function determineBackground(weatherCondition, time, sunrise, sunset) {
-    sunriseHour = convertTime(sunrise)[1];
-    sunsetHour = convertTime(sunset)[1];
-    timeHour = convertTime(time)[1];
+    let sunriseHour = convertTime(sunrise).hour;
+    let sunsetHour = convertTime(sunset).hour;
+    let timeHour = convertTime(time).hour;
+    console.log(weatherCondition, parseInt(sunriseHour), sunsetHour, timeHour);
 
     if (weatherCondition === "Snow" && (timeHour > sunsetHour || timeHour < sunriseHour)) {
         return "../images/snownight.jpeg"
