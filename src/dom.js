@@ -32,7 +32,7 @@ function renderPage(current, city) {
     dailyWeatherContainer.classList.add("weather-daily-container");
     hourlyWeatherContainer.classList.add("weather-hourly-container");
 
-    container.style.backgroundImage = determineBackground();
+    container.style.backgroundImage = determineBackground(current.weather.main, current.dt, current.sunrise, current.sunset);
     headerTitle.textContent = "Weather App";
     citySearchInput.type = "text";
     citySearchIcon.src = "../images/Icons/search.png";
@@ -95,11 +95,11 @@ function renderDailyWeather(daily) {
     let dailyHigh = document.createElement("p");
     let dailyLow = document.createElement("p");
 
-    day.textContent = "" // convert unix to day/time
+    day.textContent = convertTime(daily.dt)[0]; // convert unix to day/time
     temperature.textContent = daily.temp.day;
     dailyHigh.textContent = daily.temp.max;
     dailyLow.textContent = daily.temp.min;
-    icon.src = "" // function to determine icon
+    icon.src = determineIcon(daily.weather.main, daily.dt) 
 
     dailyContainer.classList.add("weather-daily");
     day.classList.add("day-of-week");
@@ -120,13 +120,27 @@ function renderHourlyWeather(hourly) {
     let temperature = document.createElement("h1");
     let time = document.createElement("p");
 
-    icon.src = "" // function to determine icon
+    icon.src = determineIcon(hourly.weather.main, hourly.dt) // function to determine icon
     temperature.textContent = hourly.temp;
-    time.textContent = "" // function to convert time from UNIX
+    time.textContent = convertTime(hourly.dt)[1]; // function to convert time from UNIX
 }
 
-function updateWeather(current, daily, hourly, city) {
-    renderCurrentWeather(current, city);
-    renderDailyWeather(daily);
-    rednerHourlyWeather(hourly);
+function updateBackground(current) {
+    let background = document.querySelector(".container");
+    background.style.backgroundImage = determineBackground(current.weather.main, current.dt, current.sunrise, current.sunset);
 }
+
+function updateWeather(current, dailyArr, hourlyArr, city) {
+    updateBackground(current);
+    renderCurrentWeather(current, city);
+
+    for (let i; i < dailyArr.length; i++) {
+        renderDailyWeather(dailyArr[i]);
+    }
+
+    for (let i; i < hourlyArr.length; i++) {
+        renderHourlyWeather(hourlyArr[i]);
+    }
+}
+
+export { updateWeather }
