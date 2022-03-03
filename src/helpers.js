@@ -44,6 +44,7 @@ function formatTime(hour) {
         newHour = parseInt(hour) - 12;
         abbrev = "PM";
     } else {
+        newHour = hour;
         abbrev = "AM";
     }
 
@@ -67,7 +68,7 @@ function determineIcon(weatherCondition, time) {
     } else if (weatherCondition === "Clear") {
         return "../images/Icons/sun.png"
     } else {
-        return "../images/Icons/sun.png"
+        return "../images/Icons/cloudy.png"
     }
 }
 
@@ -96,7 +97,7 @@ function determineBackground(weatherCondition, time, sunrise, sunset) {
         return "../images/cloudy2.jpg"
     } else if (weatherCondition === "Clear" && (timeHour > sunsetHour || timeHour < sunriseHour)) {
         // night 
-        return "../images/night.jpg"
+        return "../images/night.png"
     } else if (weatherCondition === "Clear" && timeHour > sunriseHour && timeHour <= 8) {
         // sunrise
         return "../images/sunrise.jpg"
@@ -109,6 +110,12 @@ function determineBackground(weatherCondition, time, sunrise, sunset) {
     } else if (weatherCondition === "Thunderstorm") {
         // thunderstorm
         return "../images/thunderstorm.jpg"
+    } else if (weatherCondition === "Fog") {
+        return "../images/fog.jpeg";
+    } else if (weatherCondition === "Mist") {
+        return "../images/mist.jpeg";
+    } else if (weatherCondition === "Tornado") {
+        return "../images/tornado.jpg";
     } else {
         return "../images/cloudy2.jpg"
     }

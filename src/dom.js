@@ -73,10 +73,10 @@ function renderCurrentWeather(current, city) {
     let pressure = document.createElement("p");
 
     location.textContent = city;
-    currentTemperature.textContent = `${current.temp} °C`; // function to convert to C
-    feelsLikeTemp.textContent = `${current.feels_like} °C`; // function to convert to C
-    humidity.textContent = `${current.humidity} %`;
-    pressure.textContent = `${current.pressure} mb`;
+    currentTemperature.textContent = `${Math.round(kelvinToCelsius(current.temp))} °C`; // function to convert to C
+    feelsLikeTemp.textContent = `Feels Like: ${Math.round(kelvinToCelsius(current.feels_like))} °C`; // function to convert to C
+    humidity.textContent = `Humidity: ${current.humidity} %`;
+    pressure.textContent = `Pressure: ${current.pressure} mb`;
     icon.src = determineIcon(current.weather[0].main, current.dt);
 
     // container.classList.add("weather-today-container");
@@ -99,9 +99,9 @@ function renderDailyWeather(daily) {
     let dailyLow = document.createElement("p");
 
     day.textContent = convertTime(daily.dt).day; // convert unix to day/time
-    temperature.textContent = `${daily.temp.day} °C`;
-    dailyHigh.textContent = `${daily.temp.max} °C`;
-    dailyLow.textContent = `${daily.temp.min} °C`;
+    temperature.textContent = `${Math.round(kelvinToCelsius(daily.temp.day))} °C`;
+    dailyHigh.textContent = `High: ${Math.round(kelvinToCelsius(daily.temp.max))} °C`;
+    dailyLow.textContent = `Low: ${Math.round(kelvinToCelsius(daily.temp.min))} °C`;
     icon.src = determineIcon(daily.weather[0].main, daily.dt);
 
     dailyContainer.classList.add("weather-daily");
@@ -124,7 +124,7 @@ function renderHourlyWeather(hourly) {
     let time = document.createElement("p");
 
     icon.src = determineIcon(hourly.weather[0].main, hourly.dt)
-    temperature.textContent = `${hourly.temp} °C`;
+    temperature.textContent = `${Math.round(kelvinToCelsius(hourly.temp))} °C`;
     time.textContent = convertTime(hourly.dt).formattedTime;
 
     hourlyContainer.classList.add("weather-hourly");
