@@ -136,7 +136,7 @@ function renderHourlyWeather(hourly) {
 
 function updateBackground(current) {
     let background = document.querySelector(".container");
-    console.log(current.weather[0].main);
+    console.log(current);
     background.style.backgroundImage = `url(${determineBackground(current.weather[0].main, current.dt, current.sunrise, current.sunset)})`;
 }
 

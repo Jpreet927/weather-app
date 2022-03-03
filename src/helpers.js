@@ -91,19 +91,19 @@ function determineBackground(weatherCondition, time, sunrise, sunset) {
     } else if (weatherCondition === "Clouds" && (timeHour > sunsetHour || timeHour < sunriseHour)) {
         // night clouds
         return "../images/night.png"
-    } else if (weatherCondition === "Clouds" && timeHour > sunriseHour && timeHour < sunsetHour) {
+    } else if (weatherCondition === "Clouds" && timeHour > sunriseHour && timeHour <= sunsetHour) {
         // day clouds
         return "../images/cloudy2.jpg"
     } else if (weatherCondition === "Clear" && (timeHour > sunsetHour || timeHour < sunriseHour)) {
         // night 
         return "../images/night.jpg"
-    } else if (weatherCondition === "Clear" && timeHour > sunriseHour && timeHour < 8) {
+    } else if (weatherCondition === "Clear" && timeHour > sunriseHour && timeHour <= 8) {
         // sunrise
         return "../images/sunrise.jpg"
-    } else if (weatherCondition === "Clear" && timeHour > 8 && timeHour < 6) {
+    } else if (weatherCondition === "Clear" && timeHour > 8 && timeHour <= 18) {
         // day time
         return "../images/sunny.jpg"
-    } else if (weatherCondition === "Clear" && timeHour > 6 && timeHour < sunsetHour) {
+    } else if (weatherCondition === "Clear" && timeHour > 18 && timeHour < sunsetHour) {
         // sunset
         return "../images/sunset.jpg"
     } else if (weatherCondition === "Thunderstorm") {
