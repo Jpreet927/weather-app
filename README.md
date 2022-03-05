@@ -1,4 +1,4 @@
-# weather-app
+# Weather App
 ![preview image](https://github.com/Jpreet927/weather-app/blob/main/images/preview1.png)
 
 ### Description
