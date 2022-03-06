@@ -49,12 +49,13 @@ header form img {
 }
 
 .container {
-  background-image: url("../images/night.png");
+  background-image: none;
   background-size: cover;
   background-position: center;
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: background-image 1s ease-in-out;
 }
 
 .weather-info {
@@ -70,7 +71,7 @@ header form img {
   flex-direction: column;
   align-items: center;
   gap: 24px;
-  /* width: 100%; */
+  width: 1380px;
 }
 
 .weather-top {
@@ -155,16 +156,21 @@ header form img {
 .weather-bottom {
   width: 100%;
   display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .weather-hourly-container {
   display: flex;
-  gap: 18px;
+  position: relative;
   width: 100%;
+  overflow: hidden;
 }
 
 .weather-hourly {
   padding: 30px 30px;
+  width: 156.5px;
+  height: 156.5px;
   flex-shrink: 0;
   flex-grow: 100;
   position: relative;
@@ -183,4 +189,72 @@ header form img {
   font-size: 12px;
   opacity: 0.4;
   padding-bottom: 20%;
+}
+
+.hourly-section {
+  display: flex;
+  gap: 18px;
+  height: 100%;
+  width: 100%;
+  /* position: absolute;
+  top: 0;
+  left: 0; */
+}
+
+.hourly-sections-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.hourly-section-btn {
+  width: 10px;
+  height: 10px;
+  background-color: none;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.788);
+}
+
+.hourly-section-btn:hover:not(.section-selected) {
+  cursor: pointer;
+}
+
+.section-selected {
+  background-color: white;
+}
+
+.unit-toggle-container {
+  position: relative;
+  width: 50px;
+  height: 25px;
+  border-radius: 25px;
+  backdrop-filter: blur(2em);
+  background-color: rgba(0, 0, 0, 0.5);
+  transition: 0.2s ease;
+}
+
+.unit-toggle-container .unit-toggle-button {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: white;
+  transition: 0.2s ease;
+}
+
+.unit-toggle-container.active {
+  background-color: rgba(255, 255, 255, 0.171);
+}
+
+.unit-toggle-container.active .unit-toggle-button {
+  transform: translateX(26px);
+}
+
+.header-right {
+  display: flex;
+  gap: 24px;
+  align-items: center;
 }
