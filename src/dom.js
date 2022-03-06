@@ -1,7 +1,7 @@
 import { fetchCurrentWeather } from './apiCalls';
 import { farenheitToCelsius, 
          celsiusToFarenheit, 
-         kelvinToCelsius, 
+         kelvinToCelsius,
          convertTime,
          determineIcon, 
          determineBackground } from './helpers'
@@ -11,6 +11,9 @@ function renderPage() {
     let container = document.createElement("div");
     let header = document.createElement("header");
     let headerTitle = document.createElement("h1");
+    let headerRight = document.createElement("div");
+    let unitToggleContainer = document.createElement("div");
+    let unitToggleButton = document.createElement("div");
     let cityForm = document.createElement("form");
     let citySearchContainer = document.createElement("div");
     let citySearchInput = document.createElement("input");
@@ -22,12 +25,23 @@ function renderPage() {
     let currentWeatherContainer = document.createElement("div");
     let dailyWeatherContainer = document.createElement("div");
     let hourlyWeatherContainer = document.createElement("div");
+    let hourlySection1 = document.createElement("div");
+    let hourlySection2 = document.createElement("div");
+    let hourlySection3 = document.createElement("div");
+    let hourlySectionButtonContainer = document.createElement("div");
+    let hourlySectionButton1 = document.createElement("div");
+    let hourlySectionButton2 = document.createElement("div");
+    let hourlySectionButton3 = document.createElement("div");
 
     container.classList.add("container");
     headerTitle.classList.add("header-title");
+    headerRight.classList.add("header-right");
+    unitToggleContainer.classList.add("unit-toggle-container");
+    unitToggleButton.classList.add("unit-toggle-button");
     cityForm.id = "city-form";
     citySearchContainer.classList.add("city-search-container");
     citySearchInput.id = "city-search";
+    citySearchInput.placeholder = "Search for a city!";
     weatherInfoBody.classList.add("weather-info");
     weatherInfoContainer.classList.add("weather-info-container");
     weatherInfoTop.classList.add("weather-top");
@@ -35,21 +49,88 @@ function renderPage() {
     currentWeatherContainer.classList.add("weather-today-container");
     dailyWeatherContainer.classList.add("weather-daily-container");
     hourlyWeatherContainer.classList.add("weather-hourly-container");
+    hourlySection1.id = "hourly-section-1";
+    hourlySection1.classList.add("hourly-section");
+    hourlySection2.id = "hourly-section-2";
+    hourlySection2.classList.add("hourly-section");
+    hourlySection3.id = "hourly-section-3";
+    hourlySection3.classList.add("hourly-section");
+    hourlySectionButtonContainer.classList.add("hourly-sections-container");
+    hourlySectionButton1.classList.add("hourly-section-btn", "section-selected");
+    hourlySectionButton2.classList.add("hourly-section-btn");
+    hourlySectionButton3.classList.add("hourly-section-btn");
 
     // container.style.backgroundImage = determineBackground(current.weather.main, current.dt, current.sunrise, current.sunset);
     headerTitle.textContent = "Weather App";
     citySearchInput.type = "text";
     citySearchIcon.src = "../images/Icons/search.png";
+    hourlySection1.style.display = "flex";
+    hourlySection2.style.display = "none";
+    hourlySection3.style.display = "none";
 
     citySearchContainer.append(citySearchInput, citySearchIcon);
     cityForm.append(citySearchContainer);
-    header.append(headerTitle, cityForm);
+    unitToggleContainer.append(unitToggleButton);
+    headerRight.append(unitToggleContainer, cityForm);
+    header.append(headerTitle, headerRight);
+    hourlyWeatherContainer.append(hourlySection1, hourlySection2, hourlySection3);
+    hourlySectionButtonContainer.append(hourlySectionButton1, hourlySectionButton2, hourlySectionButton3);
     weatherInfoTop.append(currentWeatherContainer, dailyWeatherContainer);
-    weatherInfoBottom.append(hourlyWeatherContainer);
+    weatherInfoBottom.append(hourlyWeatherContainer, hourlySectionButtonContainer);
     weatherInfoContainer.append(weatherInfoTop, weatherInfoBottom);
     weatherInfoBody.append(weatherInfoContainer);
     container.append(header, weatherInfoBody);
     body.append(container);
+
+    unitToggleContainer.addEventListener('click', () => {
+        unitToggleContainer.classList.toggle("active");
+        updateTemperatureUnits();
+    })
+
+    hourlySectionButton1.addEventListener('click', (e) => {
+        hourlySectionButton1.classList.add("section-selected");
+        hourlySection1.style.display = "flex";
+        hourlySection2.style.display = "none";
+        hourlySection3.style.display = "none";
+
+        if (hourlySectionButton2.classList.contains("section-selected")) {
+            hourlySectionButton2.classList.remove("section-selected");
+        }
+
+        if (hourlySectionButton3.classList.contains("section-selected")) {
+            hourlySectionButton3.classList.remove("section-selected");
+        }
+    });
+
+    hourlySectionButton2.addEventListener('click', (e) => {
+        hourlySectionButton2.classList.add("section-selected");
+        hourlySection2.style.display = "flex";
+        hourlySection1.style.display = "none";
+        hourlySection3.style.display = "none";
+
+        if (hourlySectionButton1.classList.contains("section-selected")) {
+            hourlySectionButton1.classList.remove("section-selected");
+        }
+
+        if (hourlySectionButton3.classList.contains("section-selected")) {
+            hourlySectionButton3.classList.remove("section-selected");
+        }
+    });
+
+    hourlySectionButton3.addEventListener('click', (e) => {
+        hourlySectionButton3.classList.add("section-selected");
+        hourlySection3.style.display = "flex";
+        hourlySection1.style.display = "none";
+        hourlySection2.style.display = "none";
+
+        if (hourlySectionButton1.classList.contains("section-selected")) {
+            hourlySectionButton1.classList.remove("section-selected");
+        }
+
+        if (hourlySectionButton2.classList.contains("section-selected")) {
+            hourlySectionButton2.classList.remove("section-selected");
+        }
+    });
 
     cityForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -116,8 +197,9 @@ function renderDailyWeather(daily) {
     container.append(dailyContainer);
 }
 
-function renderHourlyWeather(hourly) {
+function renderHourlyWeather(hourly, section) {
     let container = document.querySelector(".weather-hourly-container");
+    let sectionContainer = document.getElementById(`hourly-section-${section}`);
     let hourlyContainer = document.createElement("div");
     let icon = document.createElement("img");
     let temperature = document.createElement("h1");
@@ -131,7 +213,7 @@ function renderHourlyWeather(hourly) {
     temperature.classList.add("hourly-temperature");
     time.classList.add("hourly-time");
     hourlyContainer.append(icon, temperature, time);
-    container.append(hourlyContainer);
+    sectionContainer.append(hourlyContainer);
 }
 
 function updateBackground(current) {
@@ -143,11 +225,14 @@ function updateBackground(current) {
 function updateWeather(current, dailyArr, hourlyArr, city) {
     let currentContainer = document.querySelector(".weather-today-container");
     let dailyContainer = document.querySelector(".weather-daily-container");
-    let hourlyContainer = document.querySelector(".weather-hourly-container");
+    let hourlySectionContainers = document.querySelectorAll(".hourly-section");
 
     currentContainer.innerHTML = "";
     dailyContainer.innerHTML = "";
-    hourlyContainer.innerHTML = "";
+    
+    for (let i = 0; i < hourlySectionContainers.length; i++) {
+        hourlySectionContainers[i].innerHTML = "";
+    }
 
     updateBackground(current);
     renderCurrentWeather(current, city);
@@ -156,8 +241,73 @@ function updateWeather(current, dailyArr, hourlyArr, city) {
         renderDailyWeather(dailyArr[i]);
     }
 
-    for (let i = 0; i < 7; i++) {
-        renderHourlyWeather(hourlyArr[i]);
+    for (let i = 0; i < 8; i++) {
+        renderHourlyWeather(hourlyArr[i], 1);
+    }
+
+    for (let i = 8; i < 16; i++) {
+        renderHourlyWeather(hourlyArr[i], 2);
+    }
+
+    for (let i = 16; i < 24; i++) {
+        renderHourlyWeather(hourlyArr[i], 3);
+    }
+}
+
+function updateTemperatureUnits() {
+    let currTemp = document.querySelector(".current-temperature");
+    let dailyTempArr = document.querySelectorAll(".daily-temperature");
+    let dailyTempHigh = document.querySelectorAll(".daily-high");
+    let dailyTempLow = document.querySelectorAll(".daily-low");
+    let hourlyTempArr = document.querySelectorAll(".hourly-temperature");
+    let unitToggle = document.querySelector(".unit-toggle-container");
+
+    if (unitToggle.classList.contains("active")) {
+        let currCelsTemp = currTemp.textContent.split(" ")[0]; 
+        currTemp.textContent = `${Math.round(celsiusToFarenheit(currCelsTemp))} °F`;
+
+        for (let i = 0; i < dailyTempArr.length; i++) {
+            let dailyCelsTemp = dailyTempArr[i].textContent.split(" ")[0];
+            dailyTempArr[i].textContent = `${Math.round(celsiusToFarenheit(dailyCelsTemp))} °F`;
+        }
+
+        for (let i = 0; i < dailyTempHigh.length; i++) {
+            let highCelsTemp = dailyTempHigh[i].textContent.split(" ")[0];
+            dailyTempHigh[i].textContent = `${Math.round(celsiusToFarenheit(highCelsTemp))} °F`;
+        }
+
+        for (let i = 0; i < dailyTempLow.length; i++) {
+            let lowCelsTemp = dailyTempLow[i].textContent.split(" ")[0];
+            dailyTempLow[i].textContent = `${Math.round(celsiusToFarenheit(lowCelsTemp))} °F`;
+        }
+
+        for (let i = 0; i < hourlyTempArr.length; i++) {
+            let hourlyCelsTemp = hourlyTempArr[i].textContent.split(" ")[0];
+            hourlyTempArr[i].textContent = `${Math.round(celsiusToFarenheit(hourlyCelsTemp))} °F`;
+        }
+    } else {
+        let currFarTemp = currTemp.textContent.split(" ")[0]; 
+        currTemp.textContent = `${Math.round(farenheitToCelsius(currFarTemp))} °C`;
+
+        for (let i = 0; i < dailyTempArr.length; i++) {
+            let dailyFarTemp = dailyTempArr[i].textContent.split(" ")[0];
+            dailyTempArr[i].textContent = `${Math.round(farenheitToCelsius(dailyFarTemp))} °C`;
+        }
+
+        for (let i = 0; i < dailyTempHigh.length; i++) {
+            let highFarTemp = dailyTempHigh[i].textContent.split(" ")[0];
+            dailyTempHigh[i].textContent = `${Math.round(farenheitToCelsius(highFarTemp))} °C`;
+        }
+
+        for (let i = 0; i < dailyTempLow.length; i++) {
+            let lowFarTemp = dailyTempLow[i].textContent.split(" ")[0];
+            dailyTempLow[i].textContent = `${Math.round(farenheitToCelsius(lowFarTemp))} °C`;
+        }
+
+        for (let i = 0; i < hourlyTempArr.length; i++) {
+            let hourlyFarTemp = hourlyTempArr[i].textContent.split(" ")[0];
+            hourlyTempArr[i].textContent = `${Math.round(farenheitToCelsius(hourlyFarTemp))} °C`;
+        }
     }
 }
 

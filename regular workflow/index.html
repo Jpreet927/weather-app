@@ -12,12 +12,17 @@
     <div class="container">
         <header>
             <h1 class="header-title">Weather App</h1>
-            <form action="" id="city-form">
-                <div class="city-search-container">
-                    <input type="text" placeholder="Search for a City!" id="city-search">
-                    <img src="../images/Icons/search.png" alt="">
+            <div class="header-right">
+                <div class="unit-toggle-container">
+                    <div class="unit-toggle-button"></div>
                 </div>
-            </form>
+                <form action="" id="city-form">
+                    <div class="city-search-container">
+                        <input type="text" placeholder="Search for a City!" id="city-search">
+                        <img src="../images/Icons/search.png" alt="">
+                    </div>
+                </form>
+            </div>
         </header>
         <div class="weather-info">
             <div class="weather-info-container">
@@ -123,8 +128,14 @@
                             <p class="hourly-time">12:00 PM</p>
                         </div>
                     </div>
+                    <div class="hourly-sections-container">
+                        <div class="hourly-section section-selected" id="section-1"></div>
+                        <div class="hourly-section" id="section-2"></div>
+                        <div class="hourly-section" id="section-3"></div>
+                    </div>
                 </div>
             </div>
+
         </div>
     </div>
 </body>

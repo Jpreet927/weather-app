@@ -126,3 +126,7 @@ function kelvinToCelsius(temp) {
     celsiusTemp = temp - 273;
     return celsiusTemp
 }
+
+document.querySelector(".unit-toggle-container").addEventListener('click', () => {
+    document.querySelector(".unit-toggle-container").classList.toggle("active");
+})
